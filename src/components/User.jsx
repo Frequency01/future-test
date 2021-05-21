@@ -54,11 +54,7 @@ function User({ users, setUsers }) {
   return (
     <>
       <Paper component="form" className={classes.root}>
-        <InputBase
-          className={classes.input}
-          placeholder="Search Users"
-          onChange={(e) => handleFilter(e.target.value)}
-        />
+        <InputBase className={classes.input} placeholder="Search Users" />
         <IconButton
           type="submit"
           className={classes.iconButton}
@@ -72,17 +68,17 @@ function User({ users, setUsers }) {
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <TableCell onClick={(e) => handleSort("id")}>
+              <TableCell onClick={(_e) => handleSort("id")}>
                 Id {orderArrow}
               </TableCell>
-              <TableCell onClick={(e) => handleSort("firstName")}>
+              <TableCell onClick={(_e) => handleSort("firstName")}>
                 First Name
               </TableCell>
-              <TableCell onClick={(e) => handleSort("lastName")}>
+              <TableCell onClick={(_e) => handleSort("lastName")}>
                 Last Name
               </TableCell>
-              <TableCell onClick={(e) => handleSort("phone")}>Phone</TableCell>
-              <TableCell onClick={(e) => handleSort("email")}>Email</TableCell>
+              <TableCell onClick={(_e) => handleSort("phone")}>Phone</TableCell>
+              <TableCell onClick={(_e) => handleSort("email")}>Email</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

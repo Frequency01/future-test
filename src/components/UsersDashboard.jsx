@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import User from "./User";
 import Pagination from "./Pagination";
+import AddUser from "./AddUser";
 
 function UsersDasboard() {
   const [error, setError] = useState(null);
@@ -41,6 +42,7 @@ function UsersDasboard() {
   } else {
     return (
       <>
+        <AddUser users={currentUser} setUsers={setUsers} />
         <User users={currentUser} setUsers={setUsers} />
         <Pagination
           usersPerPage={usersPerPage}
