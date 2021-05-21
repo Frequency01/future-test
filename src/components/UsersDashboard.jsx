@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import User from "./User";
 import Pagination from "./Pagination";
 import AddUser from "./AddUser";
+import SearchBox from "./SerachBox";
 
 function UsersDasboard() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10);
+  const [usersPerPage] = useState(50);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -43,6 +44,7 @@ function UsersDasboard() {
     return (
       <>
         <AddUser users={currentUser} setUsers={setUsers} />
+        <SearchBox users={users} />
         <User users={currentUser} setUsers={setUsers} />
         <Pagination
           usersPerPage={usersPerPage}

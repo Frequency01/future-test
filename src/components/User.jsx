@@ -9,9 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
+import DetailsOfAdress from "./detailsOfAdress";
 
 const useStyles = makeStyles({
   table: {
@@ -25,6 +23,7 @@ const useStyles = makeStyles({
 function User({ users, setUsers }) {
   const [order, setOrder] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState("");
+  const [detailsOfAdress, setDetailsOfAdress] = useState(false);
   console.log(order);
   const classes = useStyles();
 
@@ -47,56 +46,46 @@ function User({ users, setUsers }) {
     let result = users.filter((user) =>
       user.firstName.toUpperCase().includes(text.toUpperCase())
     );
-    console.log(text);
-    setFilteredUsers(...result);
+    setFilteredUsers([...result]);
   };
   let orderArrow = order ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />;
+
   return (
-    <>
-      <Paper component="form" className={classes.root}>
-        <InputBase className={classes.input} placeholder="Search Users" />
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search"
-        >
-          Search
-        </IconButton>
-        <Divider className={classes.divider} orientation="vertical" />
-      </Paper>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <TableCell onClick={(_e) => handleSort("id")}>
-                Id {orderArrow}
+    <TableContainer component={Paper}>
+      <Table className={classes.table} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <TableCell onClick={(_e) => handleSort("id")}>
+              Id {orderArrow}
+            </TableCell>
+            <TableCell onClick={(_e) => handleSort("firstName")}>
+              First Name
+            </TableCell>
+            <TableCell onClick={(_e) => handleSort("lastName")}>
+              Last Name
+            </TableCell>
+            <TableCell onClick={(_e) => handleSort("phone")}>Phone</TableCell>
+            <TableCell onClick={(_e) => handleSort("email")}>Email</TableCell>
+            <TableCell onClick={(_e) => handleSort("streetAddress")}>
+              Address
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell component="th" scope="row">
+                {user.id}
               </TableCell>
-              <TableCell onClick={(_e) => handleSort("firstName")}>
-                First Name
-              </TableCell>
-              <TableCell onClick={(_e) => handleSort("lastName")}>
-                Last Name
-              </TableCell>
-              <TableCell onClick={(_e) => handleSort("phone")}>Phone</TableCell>
-              <TableCell onClick={(_e) => handleSort("email")}>Email</TableCell>
+              <TableCell>{user.firstName}</TableCell>
+              <TableCell>{user.lastName}</TableCell>
+              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.email}</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell component="th" scope="row">
-                  {user.id}
-                </TableCell>
-                <TableCell>{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.email}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 

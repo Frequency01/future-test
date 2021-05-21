@@ -10,6 +10,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const styles = (theme) => ({
   root: {
@@ -48,12 +50,14 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles((theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
+const schema = yup.object().shape({
+  id: yup.number().positive().integer().required("Id is required"),
+  firstName: yup.string().required("First Name is required"),
+  lastName: yup.string().required("Last Name is required"),
+  phone: yup.number().positive().integer().required("Phone is required"),
+  email: yup.string().email().required("Email is required"),
+});
+console.log(schema);
 
 export default function CustomizedDialogs({ users, setUsers }) {
   const [open, setOpen] = useState(false);
@@ -62,8 +66,14 @@ export default function CustomizedDialogs({ users, setUsers }) {
   const [phoneValue, setPhoneValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
   const [id, setId] = useState("");
-
-  const { register } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const onSubmit = (data) => console.log(data);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,7 +94,7 @@ export default function CustomizedDialogs({ users, setUsers }) {
   };
 
   return (
-    <div>
+    <>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Add User
       </Button>
@@ -97,50 +107,89 @@ export default function CustomizedDialogs({ users, setUsers }) {
           Modal title
         </DialogTitle>
         <DialogContent dividers>
-          <TextField
-            type="number"
-            id="standard-basic"
-            label="Id"
-            onChange={(e) => setId(e.target.value)}
-          />
-          <TextField
-            {...register("firstName", { required: true, maxLength: 20 })}
-            id="standard-basic"
-            label="First Name"
-            onChange={(e) => setFirstNameValue(e.target.value)}
-          />
-          <TextField
-            {...register("lastName", { pattern: /^[A-Za-z]+$/i })}
-            id="standard-basic"
-            label="Last Name"
-            onChange={(e) => setLastNameValue(e.target.value)}
-          />
-          <TextField
-            id="standard-basic"
-            label="Phone"
-            type="number"
-            onChange={(e) => setPhoneValue(e.target.value)}
-          />
-          <TextField
-            id="standard-basic"
-            label="Email"
-            type="email"
-            onChange={(e) => setEmailValue(e.target.value)}
-          />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              type="number"
+              id="standard-basic"
+              label="Id"
+              onChange={(e) => setId(e.target.value)}
+            />
+            <TextField
+              label="firstName"
+              {...register("firstName")}
+              onChange={(e) => setFirstNameValue(e.target.value)}
+              name="firstName"
+            />
+            {errors.firstName && <p>{errors.firstName.message}</p>}
+            <TextField
+              label="lastName"
+              {...register("lastName")}
+              onChange={(e) => setLastNameValue(e.target.value)}
+              name="lastName"
+            />
+            {errors.lastName && <p>{errors.lastName.message}</p>}
+            <TextField
+              label="phone"
+              {...register("phone")}
+              onChange={(e) => setPhoneValue(e.target.value)}
+              name="phone"
+            />
+            {errors.phone && <p>{errors.phone.message}</p>}
+            <TextField
+              label="email"
+              {...register("email")}
+              onChange={(e) => setEmailValue(e.target.value)}
+              name="email"
+            />
+            {errors.email && <p>{errors.email.message}</p>}
+            <Button
+              autoFocus
+              onClick={(e) => {
+                // handleClose();
+                // handleAddUser();
+              }}
+              color="primary"
+              type="submit"
+            >
+              Add User
+            </Button>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={(e) => {
-              handleClose();
-              handleAddUser();
-            }}
-            color="primary"
-          >
-            Add User
-          </Button>
-        </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
+
+// <DialogContent dividers>
+//           <form onSubmit={handleSubmit(onSubmit)}>
+//             <TextField
+//               type="number"
+//               id="standard-basic"
+//               label="Id"
+//               onChange={(e) => setId(e.target.value)}
+//             />
+//             <TextField
+//               id="standard-basic"
+//               label="First Name"
+//               name="firstName"
+//               onChange={(e) => setFirstNameValue(e.target.value)}
+//             />
+//             <TextField
+//               id="standard-basic"
+//               label="lastName"
+//               onChange={(e) => setLastNameValue(e.target.value)}
+//             />
+//             <TextField
+//               id="standard-basic"
+//               label="Phone"
+//               type="number"
+//               onChange={(e) => setPhoneValue(e.target.value)}
+//             />
+//             <TextField
+//               id="standard-basic"
+//               label="Email"
+//               type="email"
+//               onChange={(e) => setEmailValue(e.target.value)}
+//             />
+//           </form>
+//         </DialogContent>

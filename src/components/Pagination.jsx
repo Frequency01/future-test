@@ -13,11 +13,7 @@ const Pagination = ({ usersPerPage, totalUsers, paginate }) => {
       {pageNumbers.map((number) => {
         return (
           <ButtonGroup className="mr-2" aria-label="First group" key={number}>
-            <Button
-              onClick={() => paginate(number)}
-              href="!#"
-              className="page-link"
-            >
+            <Button onClick={() => paginate(number)} className="page-link">
               {number}
             </Button>
           </ButtonGroup>
