@@ -14,28 +14,20 @@ const useStyles = makeStyles({
   },
 });
 
-const SearchBox = ({ users }) => {
-  const [filteredUsers, setFilteredUsers] = useState("");
+const SearchBox = ({ handleFilter, setSearchTerm, searchTerm }) => {
   const classes = useStyles();
-  let handleFilter = (text) => {
-    let result = users.filter((user) =>
-      user.firstName.toUpperCase().includes(text.toUpperCase())
-    );
-    console.log(text);
-    setFilteredUsers([...result]);
-  };
+
   return (
     <Paper component="form" className={classes.root}>
       <InputBase
         className={classes.input}
         placeholder="Search Users"
-        onChange={(e) => setFilteredUsers(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       <IconButton
-        type="submit"
         className={classes.iconButton}
         aria-label="search"
-        onClick={(e) => handleFilter(e.target.value)}
+        onClick={(e) => handleFilter(searchTerm)}
       >
         Search
       </IconButton>

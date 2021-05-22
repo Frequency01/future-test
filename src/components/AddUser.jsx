@@ -51,35 +51,62 @@ const DialogContent = withStyles((theme) => ({
 }))(MuiDialogContent);
 
 const schema = yup.object().shape({
-  id: yup.number().positive().integer().required("Id is required"),
-  firstName: yup.string().required("First Name is required"),
-  lastName: yup.string().required("Last Name is required"),
-  phone: yup.number().positive().integer().required("Phone is required"),
-  email: yup.string().email().required("Email is required"),
+  id: yup
+    .number()
+    .positive()
+    .integer()
+    .required("Id is required")
+    .min(5, "Must be more than 5 digits"),
+  firstName: yup
+    .string()
+    .required("First Name is required")
+    .min(5, "Must be more than 5 digits"),
+  lastName: yup
+    .string()
+    .required("Last Name is required")
+    .min(5, "Must be more than 5 digits"),
+  phone: yup
+    .number()
+    .positive()
+    .integer()
+    .required("Phone is required")
+    .min(5, "Must be more than 5 digits"),
+  email: yup
+    .string()
+    .email()
+    .required("Email is required")
+    .min(5, "Must be more than 5 digits"),
 });
 console.log(schema);
 
-export default function CustomizedDialogs({ users, setUsers }) {
+export default function CustomizedDialogs({
+  users,
+  setUsers,
+  setFilteredUsers,
+}) {
   const [open, setOpen] = useState(false);
   const [FirstNameValue, setFirstNameValue] = useState("");
   const [LastNameValue, setLastNameValue] = useState("");
   const [phoneValue, setPhoneValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
   const [id, setId] = useState("");
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
+    mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data) => console.log(data);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
   let handleAddUser = () => {
@@ -91,6 +118,8 @@ export default function CustomizedDialogs({ users, setUsers }) {
       email: emailValue,
     };
     setUsers([newUser, ...users]);
+    setFilteredUsers([newUser, ...users]);
+    handleClose();
   };
 
   return (
@@ -107,89 +136,57 @@ export default function CustomizedDialogs({ users, setUsers }) {
           Modal title
         </DialogTitle>
         <DialogContent dividers>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleAddUser)}>
             <TextField
+              error={errors.id}
+              {...register("id")}
               type="number"
               id="standard-basic"
               label="Id"
+              helperText={errors.id && errors.id.message}
               onChange={(e) => setId(e.target.value)}
-            />
+            />{" "}
+            {/* FIXME create component TextField with props */}
             <TextField
-              label="firstName"
+              error={errors.firstName}
+              helperText={errors.firstName && errors.firstName.message}
+              label="First Name"
               {...register("firstName")}
               onChange={(e) => setFirstNameValue(e.target.value)}
               name="firstName"
-            />
-            {errors.firstName && <p>{errors.firstName.message}</p>}
+            />{" "}
+            {/* FIXME */}
             <TextField
-              label="lastName"
+              error={errors.lastName}
+              helperText={errors.lastName && errors.lastName.message}
+              label="Last Name"
               {...register("lastName")}
               onChange={(e) => setLastNameValue(e.target.value)}
               name="lastName"
-            />
-            {errors.lastName && <p>{errors.lastName.message}</p>}
+            />{" "}
+            {/* FIXME */}
             <TextField
+              error={errors.phone}
+              helperText={errors.phone && errors.phone.message}
               label="phone"
               {...register("phone")}
               onChange={(e) => setPhoneValue(e.target.value)}
               name="phone"
-            />
-            {errors.phone && <p>{errors.phone.message}</p>}
+            />{" "}
+            {/* FIXME */}
             <TextField
+              error={errors.email}
+              helperText={errors.email && errors.email.message}
               label="email"
               {...register("email")}
               onChange={(e) => setEmailValue(e.target.value)}
               name="email"
-            />
-            {errors.email && <p>{errors.email.message}</p>}
-            <Button
-              autoFocus
-              onClick={(e) => {
-                // handleClose();
-                // handleAddUser();
-              }}
-              color="primary"
-              type="submit"
-            >
-              Add User
-            </Button>
+            />{" "}
+            {/* FIXME */}
+            <input type="submit" />
           </form>
         </DialogContent>
       </Dialog>
     </>
   );
 }
-
-// <DialogContent dividers>
-//           <form onSubmit={handleSubmit(onSubmit)}>
-//             <TextField
-//               type="number"
-//               id="standard-basic"
-//               label="Id"
-//               onChange={(e) => setId(e.target.value)}
-//             />
-//             <TextField
-//               id="standard-basic"
-//               label="First Name"
-//               name="firstName"
-//               onChange={(e) => setFirstNameValue(e.target.value)}
-//             />
-//             <TextField
-//               id="standard-basic"
-//               label="lastName"
-//               onChange={(e) => setLastNameValue(e.target.value)}
-//             />
-//             <TextField
-//               id="standard-basic"
-//               label="Phone"
-//               type="number"
-//               onChange={(e) => setPhoneValue(e.target.value)}
-//             />
-//             <TextField
-//               id="standard-basic"
-//               label="Email"
-//               type="email"
-//               onChange={(e) => setEmailValue(e.target.value)}
-//             />
-//           </form>
-//         </DialogContent>

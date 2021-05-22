@@ -8,8 +8,11 @@ function UsersDasboard() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(50);
+  const [usersPerPage] = useState(10);
   const [users, setUsers] = useState([]);
+  const [order, setOrder] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     fetch(
@@ -20,6 +23,7 @@ function UsersDasboard() {
         (result) => {
           setIsLoaded(true);
           setUsers(result);
+          setFilteredUsers(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -30,10 +34,33 @@ function UsersDasboard() {
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUser = users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUser = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  let handleSort = (key) => {
+    let sortedUsers = [...filteredUsers].sort(function (a, b) {
+      if (a[key] > b[key]) {
+        return order ? -1 : 1;
+      }
+      if (a[key] < b[key]) {
+        return order ? 1 : -1;
+      }
+
+      return 0;
+    });
+    setOrder(!order);
+    setFilteredUsers(sortedUsers);
+  };
+
+  let handleFilter = (text) => {
+    let result = users.filter((user) =>
+      user.firstName.toUpperCase().includes(text.toUpperCase())
+    );
+    setSearchTerm(text);
+    setFilteredUsers([...result]);
   };
 
   if (error) {
@@ -43,13 +70,28 @@ function UsersDasboard() {
   } else {
     return (
       <>
-        <AddUser users={currentUser} setUsers={setUsers} />
-        <SearchBox users={users} />
-        <User users={currentUser} setUsers={setUsers} />
+        <AddUser
+          users={currentUser}
+          setUsers={setUsers}
+          setFilteredUsers={setFilteredUsers}
+        />
+        <SearchBox
+          users={users}
+          handleFilter={handleFilter}
+          setSearchTerm={setSearchTerm}
+          searchTerm={searchTerm}
+        />
+        <User
+          users={currentUser}
+          setUsers={setUsers}
+          handleSort={handleSort}
+          order={order}
+        />
         <Pagination
           usersPerPage={usersPerPage}
           totalUsers={users.length}
           paginate={paginate}
+          currentPage={currentPage}
         />
       </>
     );

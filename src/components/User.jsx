@@ -20,34 +20,9 @@ const useStyles = makeStyles({
   },
 });
 
-function User({ users, setUsers }) {
-  const [order, setOrder] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState("");
-  const [detailsOfAdress, setDetailsOfAdress] = useState(false);
-  console.log(order);
+function User({ users, setUsers, handleSort, order }) {
   const classes = useStyles();
 
-  let handleSort = (key) => {
-    let sortedUsers = [...users].sort(function (a, b) {
-      if (a[key] > b[key]) {
-        return order ? -1 : 1;
-      }
-      if (a[key] < b[key]) {
-        return order ? 1 : -1;
-      }
-
-      return 0;
-    });
-    setUsers(sortedUsers);
-    setOrder(!order);
-  };
-
-  let handleFilter = (text) => {
-    let result = users.filter((user) =>
-      user.firstName.toUpperCase().includes(text.toUpperCase())
-    );
-    setFilteredUsers([...result]);
-  };
   let orderArrow = order ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />;
 
   return (
@@ -66,14 +41,11 @@ function User({ users, setUsers }) {
             </TableCell>
             <TableCell onClick={(_e) => handleSort("phone")}>Phone</TableCell>
             <TableCell onClick={(_e) => handleSort("email")}>Email</TableCell>
-            <TableCell onClick={(_e) => handleSort("streetAddress")}>
-              Address
-            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id}>
+            <TableRow key={user.id + user.firstName}>
               <TableCell component="th" scope="row">
                 {user.id}
               </TableCell>
