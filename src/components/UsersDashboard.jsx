@@ -3,8 +3,9 @@ import User from "./User";
 import Pagination from "./Pagination";
 import AddUser from "./AddUser";
 import SearchBox from "./SerachBox";
+import DetailsOfUser from "./detailsOfAdress";
 
-function UsersDasboard() {
+function UsersDasboard({ user }) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,6 +14,8 @@ function UsersDasboard() {
   const [order, setOrder] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [userInformation, setUserInformatiom] = useState(null);
+  console.log(userInformation);
 
   useEffect(() => {
     fetch(
@@ -38,6 +41,10 @@ function UsersDasboard() {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  let UserInformation = (user) => {
+    setUserInformatiom(user);
   };
 
   let handleSort = (key) => {
@@ -86,6 +93,7 @@ function UsersDasboard() {
           setUsers={setUsers}
           handleSort={handleSort}
           order={order}
+          UserInformation={UserInformation}
         />
         <Pagination
           usersPerPage={usersPerPage}
@@ -93,6 +101,9 @@ function UsersDasboard() {
           paginate={paginate}
           currentPage={currentPage}
         />
+        {userInformation ? (
+          <DetailsOfUser userInformation={userInformation} />
+        ) : null}
       </>
     );
   }

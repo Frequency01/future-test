@@ -9,7 +9,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import DetailsOfAdress from "./detailsOfAdress";
 
 const useStyles = makeStyles({
   table: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-function User({ users, setUsers, handleSort, order }) {
+function User({ users, handleSort, order, UserInformation }) {
   const classes = useStyles();
 
   let orderArrow = order ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />;
@@ -46,7 +45,11 @@ function User({ users, setUsers, handleSort, order }) {
         <TableBody>
           {users.map((user) => (
             <TableRow key={user.id + user.firstName}>
-              <TableCell component="th" scope="row">
+              <TableCell
+                component="th"
+                scope="row"
+                onClick={(e) => UserInformation(user)}
+              >
                 {user.id}
               </TableCell>
               <TableCell>{user.firstName}</TableCell>
