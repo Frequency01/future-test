@@ -1,16 +1,40 @@
 import React from "react";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
+import Paper from "@material-ui/core/Paper";
 
-export default function detailsOfUser({ userInformation }) {
+const useStyles = makeStyles({
+  root: {
+    minWidth: "40rem",
+    padding: "2rem",
+  },
+});
+
+export default function DetailsOfUser({ selectedUser, hideSelectedUser }) {
+  const classes = useStyles();
   return (
-    <div>
-      <div>
-        Выбран пользователь <p>{userInformation.firstName}</p>
-        <p>{userInformation.lastName}</p>
-      </div>
-      <p>Адрес проживания: {userInformation.address.streetAddress}</p>
-      <p>Город: {userInformation.address.city}</p>
-      <p>Провинция/штат: {userInformation.address.state}</p>
-      <p>Индекс: {userInformation.address.zip}</p>
-    </div>
+    <Paper elevation={3} className={classes.root}>
+      <CloseIcon onClick={(e) => hideSelectedUser()} />
+      <Grid container direction="row" justify="center" alignItems="center">
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+          <p>
+            Выбран пользователь: {selectedUser.firstName}{" "}
+            {selectedUser.lastName}
+          </p>
+
+          {selectedUser.address ? (
+            <>
+              <p>Адрес проживания: {selectedUser.address.streetAddress}</p>
+              <p>Город: {selectedUser.address.city}</p>
+              <p>Провинция/штат: {selectedUser.address.state}</p>
+              <p>Индекс: {selectedUser.address.zip}</p>
+            </>
+          ) : (
+            <p>No address</p>
+          )}
+        </Grid>
+      </Grid>
+    </Paper>
   );
 }

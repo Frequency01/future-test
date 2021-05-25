@@ -1,57 +1,89 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+  Grid,
+  Paper,
+  TableRow,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+  makeStyles,
+} from "@material-ui/core";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
 const useStyles = makeStyles({
   table: {
-    minWidth: "10rem",
+    tableLayout: "fixed",
   },
-  row: {
-    fontSize: "2rem",
+  clickable: {
+    cursor: "pointer",
   },
 });
 
-function User({ users, handleSort, order, UserInformation }) {
+function User({ users, handleSort, order, showSelectedUser }) {
+  const [selectedRow, setSelectedRow] = useState(null);
   const classes = useStyles();
 
-  let orderArrow = order ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />;
+  let orderArrow = (
+    <div>
+      {order === null ? (
+        ""
+      ) : order ? (
+        <ArrowUpwardIcon />
+      ) : (
+        <ArrowDownwardIcon />
+      )}
+    </div>
+  );
+
+  let tableSell = (rowName) => {
+    return (
+      <TableCell
+        onClick={(_e) => {
+          handleSort(rowName.keyName);
+          changeOrderArrow(rowName.keyName);
+        }}
+        className={classes.clickable}
+        key={rowName.keyName}
+      >
+        <Grid container>
+          <Grid item>{rowName.title}</Grid>
+          <Grid item>{renderOrderArrow(rowName.keyName)}</Grid>
+        </Grid>
+      </TableCell>
+    );
+  };
+
+  let tableHeaders = [
+    { keyName: "id", title: "ID" },
+    { keyName: "firstName", title: "First Name" },
+    { keyName: "lastName", title: "Last Name" },
+    { keyName: "phone", title: "Phone" },
+    { keyName: "email", title: "Email" },
+  ];
+  let renderOrderArrow = (rowName) => {
+    return selectedRow === rowName ? orderArrow : null;
+  };
+  let changeOrderArrow = (rowName) => {
+    setSelectedRow(rowName);
+  };
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
+      <Table className={classes.table}>
         <TableHead>
-          <TableRow>
-            <TableCell onClick={(_e) => handleSort("id")}>
-              Id {orderArrow}
-            </TableCell>
-            <TableCell onClick={(_e) => handleSort("firstName")}>
-              First Name
-            </TableCell>
-            <TableCell onClick={(_e) => handleSort("lastName")}>
-              Last Name
-            </TableCell>
-            <TableCell onClick={(_e) => handleSort("phone")}>Phone</TableCell>
-            <TableCell onClick={(_e) => handleSort("email")}>Email</TableCell>
-          </TableRow>
+          <TableRow>{tableHeaders.map((header) => tableSell(header))}</TableRow>
         </TableHead>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id + user.firstName}>
-              <TableCell
-                component="th"
-                scope="row"
-                onClick={(e) => UserInformation(user)}
-              >
-                {user.id}
-              </TableCell>
+            <TableRow
+              key={user.id + user.firstName}
+              onClick={(e) => showSelectedUser(user)}
+              className={classes.clickable}
+            >
+              <TableCell>{user.id}</TableCell>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
               <TableCell>{user.phone}</TableCell>
