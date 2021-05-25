@@ -157,7 +157,7 @@ export default function AddUser({ users, setUsers, setFilteredUsers }) {
                 alignItems="center"
               >
                 {formFields.map((field) => (
-                  <Grid item xs={6}>
+                  <Grid item xs={6} key={field.name}>
                     <TextField
                       error={!!errors[field.name]}
                       {...register(field.name)}
